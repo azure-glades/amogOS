@@ -6,8 +6,8 @@ rm *.o
 # remove isodir
 rm -r isodir
 
-# remove Pong_Game.bin
-rm Pong_Game.bin
+# remove amogOS.bin
+rm amogOS.bin
 
-# remove Pong_Game.iso
-rm Pong_Game.iso
+# remove amogOS.iso
+rm amogOS.iso
