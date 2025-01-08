@@ -23,7 +23,7 @@ compile & run
 
 
 // size of bounced rectangle
-#define RECT_SIZE      6
+#define BALL_SIZE      6
 
 // speed of rectangle on qemu
 #ifdef QEMU

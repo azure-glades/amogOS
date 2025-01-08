@@ -98,6 +98,17 @@ void init_vga()
   g_vga_buffer = (uint8*)VGA_ADDRESS;
 
   clear_screen();
+  draw_string(10, 100, BRIGHT_BLUE, "AMOG OS _");
+  sleep(10);
+  draw_string(10, 100, BRIGHT_BLUE, "AMOG OS _ _");
+  sleep(10);
+  draw_string(10, 100, BRIGHT_BLUE, "AMOG OS _ _ _");
+  sleep(10);
+  draw_string(10, 100, BRIGHT_BLUE, "AMOG OS _ _ _ _");
+  sleep(10);
+  draw_string(10, 100, BRIGHT_BLUE, "AMOG OS _ _ _ _ _"); 
+  sleep(100);
+  clear_screen();
 }
 
 void putpixel(uint16 x, uint16 y, uint8 color)
@@ -189,3 +200,27 @@ void draw_diamond(uint16 x, uint16 y, uint16 radius, uint8 color)
   } 
 }
 
+void draw_ball(uint16 x, uint16 y, uint8 color) {
+    // Define the crewmate's shape in a 10x10 grid
+    uint8 crewmate[10][10] = {
+        {0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
+        {0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    };
+
+    // Draw the crewmate character on the screen
+    for (uint16 i = 0; i < 10; i++) {
+        for (uint16 j = 0; j < 10; j++) {
+            if (crewmate[i][j] == 1) {
+                putpixel(x + j, y + i, color);
+            }
+        }
+    }
+}

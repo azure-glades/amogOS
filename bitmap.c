@@ -155,6 +155,88 @@ uint8 bitmaps_A_Z[26][BITMAP_SIZE] = {
 
 };
 
+uint8 bitmaps_symbols[20][BITMAP_SIZE] = {
+  // /
+  {0b00000011, 0b00000110, 0b00001100, 0b00011000,
+   0b00110000, 0b01100000, 0b11000000, 0b10000000},
+
+  // |
+  {0b00011000, 0b00011000, 0b00011000, 0b00011000,
+   0b00011000, 0b00011000, 0b00011000, 0b00011000},
+
+  // $
+  {0b00011000, 0b01111110, 0b11000000, 0b01111100,
+   0b00000011, 0b01111110, 0b00011000, 0b00000000},
+
+  // %
+  {0b11000011, 0b11000110, 0b00001100, 0b00011000,
+   0b00110000, 0b01100000, 0b11000110, 0b10000110},
+
+  // ^
+  {0b00111000, 0b01101100, 0b11000110, 0b00000000,
+   0b00000000, 0b00000000, 0b00000000, 0b00000000},
+
+  // &
+  {0b01110000, 0b11001100, 0b11001100, 0b01110000,
+   0b11010110, 0b11001100, 0b11001100, 0b01110010},
+
+  // *
+  {0b00011000, 0b01111110, 0b00111100, 0b01111110,
+   0b00011000, 0b00000000, 0b00000000, 0b00000000},
+
+  // #
+  {0b00110110, 0b01111111, 0b00110110, 0b00110110,
+   0b01111111, 0b00110110, 0b00110110, 0b00000000},
+
+  // @
+  {0b01111110, 0b11000011, 0b11011111, 0b11011111,
+   0b11011111, 0b11011111, 0b11000000, 0b01111110},
+
+  // <
+  {0b00000110, 0b00001100, 0b00011000, 0b00110000,
+   0b00011000, 0b00001100, 0b00000110, 0b00000000},
+
+  // >
+  {0b01100000, 0b00110000, 0b00011000, 0b00001100,
+   0b00011000, 0b00110000, 0b01100000, 0b00000000},
+
+  // :
+  {0b00000000, 0b00011000, 0b00011000, 0b00000000,
+   0b00000000, 0b00011000, 0b00011000, 0b00000000},
+
+  // ;
+  {0b00000000, 0b00011000, 0b00011000, 0b00000000,
+   0b00000000, 0b00011000, 0b00011000, 0b00110000},
+
+  // ?
+  {0b01111110, 0b11000011, 0b00000111, 0b00001110,
+   0b00011000, 0b00011000, 0b00000000, 0b00011000},
+
+  // !
+  {0b00011000, 0b00011000, 0b00011000, 0b00011000,
+   0b00011000, 0b00000000, 0b00011000, 0b00011000},
+
+  // +
+  {0b00011000, 0b00011000, 0b01111110, 0b00011000,
+   0b00011000, 0b00000000, 0b00000000, 0b00000000},
+
+  // -
+  {0b00000000, 0b00000000, 0b01111110, 0b00000000,
+   0b00000000, 0b00000000, 0b00000000, 0b00000000},
+
+  // =
+  {0b00000000, 0b01111110, 0b00000000, 0b01111110,
+   0b00000000, 0b00000000, 0b00000000, 0b00000000},
+
+  // _
+  {0b00000000, 0b00000000, 0b00000000, 0b00000000,
+   0b00000000, 0b00000000, 0b01111111, 0b00000000},
+
+  // ~
+  {0b00000000, 0b00000000, 0b01110011, 0b11011110,
+   0b00000000, 0b00000000, 0b00000000, 0b00000000}
+};
+
 // putpixels of 0-9 bits from right-to-left
 void draw_num_bitmaps(uint16 index, uint16 x, uint16 y, uint8 color)
 {
@@ -196,6 +278,25 @@ void draw_alpha_bitmaps(uint16 index, uint16 x, uint16 y, uint8 color)
     y++;
   }
 }
+void draw_symbol_bitmaps(uint16 index, uint16 x, uint16 y, uint8 color)
+{
+  uint16 temp = 0, pix = 0;
+
+  for(uint8 i = 0; i < BITMAP_SIZE; i++){
+    temp = x;
+    x += BITMAP_SIZE;
+    pix = bitmaps_symbols[index][i];
+    while(pix > 0){
+      if(pix & 1){
+        putpixel(x, y, color);
+      }
+      pix >>= 1;
+      x--;  
+    }
+    x = temp;
+    y++;
+  }
+}
 
 void draw_char(uint16 x, uint16 y, uint8 color, char ch)
 {
@@ -203,6 +304,30 @@ void draw_char(uint16 x, uint16 y, uint8 color, char ch)
     draw_num_bitmaps(ch - '0', x, y, color);
   }else if(ch >= 'A' && ch <= 'Z'){
     draw_alpha_bitmaps((ch - '0') - 17, x, y, color);
+  } else{
+    switch(ch){
+      case '/': draw_symbol_bitmaps(0, x, y, color); break;
+      case '|': draw_symbol_bitmaps(1, x, y, color); break;
+      case '$': draw_symbol_bitmaps(2, x, y, color); break;
+      case '%': draw_symbol_bitmaps(3, x, y, color); break;
+      case '^': draw_symbol_bitmaps(4, x, y, color); break;
+      case '&': draw_symbol_bitmaps(5, x, y, color); break;
+      case '*': draw_symbol_bitmaps(6, x, y, color); break;
+      case '#': draw_symbol_bitmaps(7, x, y, color); break;
+      case '@': draw_symbol_bitmaps(8, x, y, color); break;
+      case '<': draw_symbol_bitmaps(9, x, y, color); break;
+      case '>': draw_symbol_bitmaps(10, x, y, color); break;
+      case ':': draw_symbol_bitmaps(11, x, y, color); break;
+      case ';': draw_symbol_bitmaps(12, x, y, color); break;
+      case '?': draw_symbol_bitmaps(13, x, y, color); break;
+      case '!': draw_symbol_bitmaps(14, x, y, color); break;
+      case '+': draw_symbol_bitmaps(15, x, y, color); break;
+      case '-': draw_symbol_bitmaps(16, x, y, color); break;
+      case '=': draw_symbol_bitmaps(17, x, y, color); break;
+      case '_': draw_symbol_bitmaps(18, x, y, color); break;
+      case '~': draw_symbol_bitmaps(19, x, y, color); break;
+      default: break; // If the character is not recognized, do nothing
+    }
   }
 }
 

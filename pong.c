@@ -10,26 +10,31 @@ uint32 score_count2 = 0; // Player 2 score
 static void init_game()
 {
     uint8 b = 0;
+    //draw_logo(10,20,GREEN);
+    draw_string(144, 10, BRIGHT_RED, "PONG");
+    draw_string(10, 50, RED, "HOW TO PLAY");
+    draw_string(10, 60, BLUE, "PLAYER 1");
+    draw_string(30, 70, WHITE, "UP: ARROW UP");
+    draw_string(30, 80, WHITE, "DOWN: ARROW DOWN");
 
-    draw_string(120, 13, BRIGHT_CYAN, "PONG GAME");
-    draw_rect(100, 4, 120, 25, BLUE);
-    draw_string(10, 50, BRIGHT_MAGENTA, "HOW TO PLAY");
-    draw_rect(2, 40, 235, 80, BROWN);
-    draw_string(10, 70, BRIGHT_RED, "PLAYER 1 (ARROWS)");
-    draw_string(30, 80, WHITE, "UP: ARROW UP | DOWN: ARROW DOWN");
-    draw_string(10, 90, BRIGHT_RED, "PLAYER 2 (WS)");
-    draw_string(30, 100, WHITE, "UP: W | DOWN: S");
-    draw_string(60, 160, BRIGHT_GREEN, "PRESS ENTER TO START");
+    draw_string(10, 100, BLUE, "PLAYER 2");
+    draw_string(30, 110, WHITE, "UP: W");
+    draw_string(30, 120, WHITE, "DOWN: S");
+    
 #ifdef VIRTUALBOX
     sleep(10);
 #endif
     while (1)
     {
+        draw_string(60, 160, GREY, "PRESS ENTER TO START");
+        sleep(30);
+        draw_string(60, 160, CYAN, "PRESS ENTER TO START");
         b = get_input_keycode();
         sleep(5);
         if (b == KEY_ENTER)
             break;
         b = 0;
+        sleep(30);
     }
     clear_screen();
 }
@@ -55,25 +60,27 @@ static void lose(uint8 player)
 
     if (player == 1)
     {
-        draw_string(120, 15, BRIGHT_GREEN, "PLAYER 2 WINS!");
+        draw_string(10, 10, BRIGHT_GREEN, "PLAYER 2 WINS!");
     }
     else
     {
-        draw_string(120, 15, BRIGHT_GREEN, "PLAYER 1 WINS!");
+        draw_string(10, 10, BRIGHT_GREEN, "PLAYER 1 WINS!");
     }
-
-    draw_string(60, 160, YELLOW, "PRESS ENTER TO RESTART");
 
 #ifdef VIRTUALBOX
     sleep(10);
 #endif
     while (1)
     {
+        draw_string(60, 160, YELLOW, "PRESS ENTER TO RESTART");
+        sleep(30);
+        draw_string(60, 160, BLUE, "PRESS ENTER TO RESTART");
         b = get_input_keycode();
         sleep(5);
         if (b == KEY_ENTER)
             break;
         b = 0;
+        sleep(30);
     }
 
     score_count1 = 0;
@@ -115,21 +122,21 @@ void move_paddles()
 
 void pong_game()
 {
-    uint16 rect_pos_x = RECT_SIZE + 20;
-    uint16 rect_pos_y = RECT_SIZE;
+    uint16 rect_pos_x = BALL_SIZE + 20;
+    uint16 rect_pos_y = BALL_SIZE;
     uint16 rect_speed_x = RECT_SPEED_X;
     uint16 rect_speed_y = RECT_SPEED_Y;
-
     init_game();
 
     while (1)
     {
         // Update ball position
+        // commented for debugging
         rect_pos_x += rect_speed_x;
         rect_pos_y += rect_speed_y;
 
         // Collision with Player 1's paddle
-        if (rect_pos_x - RECT_SIZE <= PAD_WIDTH + 1)
+        if (rect_pos_x - BALL_SIZE <= PAD_WIDTH + 1)
         {
             if (rect_pos_y < pad_pos_y1 || rect_pos_y > pad_pos_y1 + PAD_HEIGHT)
             {
@@ -138,12 +145,12 @@ void pong_game()
             else
             {
                 rect_speed_x = -rect_speed_x;
-                rect_pos_x = PAD_WIDTH + RECT_SIZE;
+                rect_pos_x = PAD_WIDTH + BALL_SIZE;
                 score_count1++;
             }
         }
         // Collision with Player 2's paddle
-        else if (rect_pos_x + RECT_SIZE >= PAD_POS_X + RECT_SIZE - 1)
+        else if (rect_pos_x + BALL_SIZE >= PAD_POS_X + BALL_SIZE - 1)
         {
             if (rect_pos_y < pad_pos_y2 || rect_pos_y > pad_pos_y2 + PAD_HEIGHT)
             {
@@ -152,13 +159,13 @@ void pong_game()
             else
             {
                 rect_speed_x = -rect_speed_x;
-                rect_pos_x = PAD_POS_X - RECT_SIZE;
+                rect_pos_x = PAD_POS_X - BALL_SIZE;
                 score_count2++;
             }
         }
 
         // Collision with screen bounds (top/bottom)
-        if (rect_pos_y - RECT_SIZE <= 0 || rect_pos_y + RECT_SIZE >= VGA_MAX_HEIGHT)
+        if (rect_pos_y - BALL_SIZE <= 0 || rect_pos_y + BALL_SIZE >= VGA_MAX_HEIGHT)
         {
             rect_speed_y = -rect_speed_y;
         }
@@ -167,7 +174,8 @@ void pong_game()
         clear_screen();
         move_paddles();
         update_scores();
-        fill_rect(rect_pos_x - RECT_SIZE, rect_pos_y - RECT_SIZE, RECT_SIZE, RECT_SIZE, WHITE);
-        sleep(1);
+        // rectangular ball: fill_rect(rect_pos_x - BALL_SIZE, rect_pos_y - BALL_SIZE, BALL_SIZE, BALL_SIZE, WHITE);
+        draw_ball(rect_pos_x - BALL_SIZE, rect_pos_y - BALL_SIZE, BRIGHT_BLUE);
+        sleep(2);
     }
 }

@@ -67,6 +67,7 @@ void draw_rect(uint16 x, uint16 y, uint16 width, uint16 height, uint8 color);
 void fill_rect(uint16 x, uint16 y, uint16 width, uint16 height, uint8 color);
 void draw_circle(uint16 x, uint16 y, uint16 radius, uint8 color);
 void draw_diamond(uint16 x, uint16 y, uint16 radius, uint8 color);
+void draw_ball(uint16 x, uint16 y, uint8 color);
 
 #endif
 
